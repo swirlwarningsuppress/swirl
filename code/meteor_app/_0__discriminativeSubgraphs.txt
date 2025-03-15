@@ -1,0 +1,3 @@
+String:selfAmoryTag:{} -> Logger.warn() (para),+
+String:selfAmoryTag:{}
+Logger__warn()

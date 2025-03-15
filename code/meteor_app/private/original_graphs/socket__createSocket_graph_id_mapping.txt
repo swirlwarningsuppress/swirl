@@ -1,0 +1,2 @@
+ApacheThriftMethodInvoker.java3,0,3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#
+Transport.java4,1,4 - Transport.createRaw#HostAndPort#Optional#Optional#int#

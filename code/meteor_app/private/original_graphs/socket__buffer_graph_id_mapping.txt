@@ -1,0 +1,4 @@
+LegacyApacheThriftTesterUtil.java1,1,1 - LegacyApacheThriftTesterUtil.createClientSocket#boolean#HostAndPort#
+ByteArrayOutputStream.java2,2,2 - ByteArrayOutputStream.ByteArrayOutputStream#ColumnWriterOptions#Optional#StreamKind#
+ApacheThriftMethodInvoker.java3,6,3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#
+Transport.java4,8,4 - Transport.createRaw#HostAndPort#Optional#Optional#int#

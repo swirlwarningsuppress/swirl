@@ -1,0 +1,10 @@
+16 - ImplementAutoCloseable.unsafe#,resource_leaks
+18 - AutoclosingSockets2.safe2#SSLContext#,resource_leaks
+14 - ImplementAutoCloseable.unsafe#,resource_leaks
+8 - ReturnCloseable.unsafe#,resource_leaks
+10 - Standard.unsafe#String[]#,resource_leaks
+4 - AutoclosingSockets.safe#,resource_leaks
+6 - AutoclosingSockets2.safe#SSLContext#,resource_leaks
+0 - WrappedCloseable.safe#,resource_leaks
+2 - WrappedCloseable22.safe2#,resource_leaks
+12 - ReturnCloseable2.unsafe#,resource_leaks

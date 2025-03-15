@@ -1,0 +1,11 @@
+4 - Transport.Transport#,com.facebook.presto.hive.metastore.thrift
+1 - LegacyApacheThriftTesterUtil.logThrift#HostAndPort#List#List#Transport#Protocol#boolean#,io.airlift.drift.integration
+3 - ApacheThriftMethodInvoker.setSocketProperties#Socket#,io.airlift.drift.transport.apache.client
+2 - ByteArrayOutputStream.ByteArrayOutputStream#ColumnWriterOptions#Optional#,com.facebook.presto.orc.stream
+1 - LegacyApacheThriftTesterUtil.createClientSocket#boolean#HostAndPort#,io.airlift.drift.integration
+2 - ByteArrayOutputStream.ByteArrayOutputStream#ColumnWriterOptions#Optional#StreamKind#,com.facebook.presto.orc.stream
+3 - ApacheThriftMethodInvoker.ApacheThriftMethodInvoker#ListeningExecutorService#ListeningScheduledExecutorService#TTransportFactory#TProtocolFactory#Duration#Duration#Optional#Optional#,io.airlift.drift.transport.apache.client
+1 - LegacyApacheThriftTesterUtil.LegacyApacheThriftTesterUtil#,io.airlift.drift.integration
+3 - ApacheThriftMethodInvoker.invokeSynchronous#InvokeRequest#,io.airlift.drift.transport.apache.client
+3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,io.airlift.drift.transport.apache.client
+4 - Transport.createRaw#HostAndPort#Optional#Optional#int#,com.facebook.presto.hive.metastore.thrift

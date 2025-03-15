@@ -1,0 +1,11 @@
+4 - Transport.Transport#,java.lang.Object
+1 - LegacyApacheThriftTesterUtil.logThrift#HostAndPort#List#List#Transport#Protocol#boolean#,java.lang.Object
+3 - ApacheThriftMethodInvoker.setSocketProperties#Socket#,
+2 - ByteArrayOutputStream.ByteArrayOutputStream#ColumnWriterOptions#Optional#,java.lang.Object,com.facebook.presto.orc.stream.ValueOutputStream<com.facebook.presto.orc.checkpoint.ByteArrayStreamCheckpoint>
+1 - LegacyApacheThriftTesterUtil.createClientSocket#boolean#HostAndPort#,java.lang.Object
+2 - ByteArrayOutputStream.ByteArrayOutputStream#ColumnWriterOptions#Optional#StreamKind#,java.lang.Object,com.facebook.presto.orc.stream.ValueOutputStream<com.facebook.presto.orc.checkpoint.ByteArrayStreamCheckpoint>
+3 - ApacheThriftMethodInvoker.ApacheThriftMethodInvoker#ListeningExecutorService#ListeningScheduledExecutorService#TTransportFactory#TProtocolFactory#Duration#Duration#Optional#Optional#,
+1 - LegacyApacheThriftTesterUtil.LegacyApacheThriftTesterUtil#,java.lang.Object
+3 - ApacheThriftMethodInvoker.invokeSynchronous#InvokeRequest#,
+3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,
+4 - Transport.createRaw#HostAndPort#Optional#Optional#int#,java.lang.Object

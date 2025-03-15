@@ -1,0 +1,10 @@
+16 - ImplementAutoCloseable.unsafe#,java.lang.Object
+18 - AutoclosingSockets2.safe2#SSLContext#,java.lang.Object
+14 - ImplementAutoCloseable.unsafe#,java.lang.Object
+8 - ReturnCloseable.unsafe#,java.lang.Object
+10 - Standard.unsafe#String[]#,java.lang.Object
+4 - AutoclosingSockets.safe#,java.lang.Object
+6 - AutoclosingSockets2.safe#SSLContext#,java.lang.Object
+0 - WrappedCloseable.safe#,java.lang.Object
+2 - WrappedCloseable22.safe2#,java.lang.Object
+12 - ReturnCloseable2.unsafe#,java.lang.Object

@@ -1,0 +1,17 @@
+Dataset,Heuristic,Scenario,Probability,Iteration,Conciseness
+alibaba_nacos,All Heuristics,All Heuristics,p=0.5,5.5,1.85
+alibaba_nacos,Code Length,Heuristic 1 Only,p=0.5,5.5,5.15
+alibaba_nacos,Code Similarity,Heuristic 2 Only,p=0.5,5.5,2.0
+alibaba_nacos,Same Containment,Heuristic 3 Only,p=0.5,5.5,3.1333333333333333
+apache_dubbo,All Heuristics,All Heuristics,p=0.5,5.5,0.0
+apache_dubbo,Code Length,Heuristic 1 Only,p=0.5,5.5,5.05
+apache_dubbo,Code Similarity,Heuristic 2 Only,p=0.5,5.5,0.0
+apache_dubbo,Same Containment,Heuristic 3 Only,p=0.5,5.5,40.1
+apache_lucene,All Heuristics,All Heuristics,p=0.5,5.5,1.3666666666666667
+apache_lucene,Code Length,Heuristic 1 Only,p=0.5,5.5,1.5666666666666667
+apache_lucene,Code Similarity,Heuristic 2 Only,p=0.5,5.5,1.4166666666666665
+apache_lucene,Same Containment,Heuristic 3 Only,p=0.5,5.5,3.2
+presto,All Heuristics,All Heuristics,p=0.5,5.5,2.2
+presto,Code Length,Heuristic 1 Only,p=0.5,5.5,1.0
+presto,Code Similarity,Heuristic 2 Only,p=0.5,5.5,5.45
+presto,Same Containment,Heuristic 3 Only,p=0.5,5.5,0.0

@@ -1,0 +1,7 @@
+
+WARNING_TYPE=NULL_DEREFERENCE__toy_analysis WARNING_JSON_NAME=infer_warnings_xxx_toy_analysis_NULL_DEREFERENCE ~/.meteor/meteor --port 5433
+
+WARNING_TYPE=RESOURCE_LEAK__presto WARNING_JSON_NAME=infer_warnings_prestodb_presto_RESOURCE_LEAK ~/.meteor/meteor --port 5437
+
+WARNING_JSON_NAME=infer_warnings_alibaba_nacos_NULL_DEREFERENCE ~/.meteor/meteor --port 5435
+

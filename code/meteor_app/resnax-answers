@@ -1,0 +1,5 @@
+startwith(<j>)
+startwith(<low>)
+startwith(<let>)
+endwith(<low>)
+endwith(<let>)

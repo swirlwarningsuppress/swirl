@@ -1,0 +1,119 @@
+
+python3 meteor_app/misc_scripts/convert_github_files_into_json_dataset_messagedigest.py
+mv cryptoapi_bench_digest2.json  cryptoapi_bench_digest.json
+cp cryptoapi_bench_digest.json  meteor_app/private/
+
+
+Run from eclipse, HJGraphBuilderForActiveLearningInterface
+cp ~/repos/MUDetect/src2egroum2aug/output/java.security.MessageDigest__digest/java.security.MessageDigest__* meteor_app/private/original_graphs/
+
+
+
+python3 meteor_app/misc_scripts/convert_github_files_into_json_dataset.py
+mv cryptoapi_bench_init2.json cryptoapi_bench_init.json
+cp cryptoapi_bench_init.json  meteor_app/private/
+Run from eclipse, HJGraphBuilderForActiveLearningInterface
+Run from eclipse, HJGraphBuilderForActiveLearningInterface
+cp ~/repos/MUDetect/src2egroum2aug/output/javax.crypto.Cipher__init/javax.crypto.Cipher__init_* meteor_app/private/original_graphs/
+
+cp ~/repos/MUDetect/src2egroum2aug/output/javax.crypto.Cipher__init/javax.crypto.Cipher__init_* graphs/
+
+
+python3 meteor_app/misc_scripts/convert_github_files_into_json_dataset_securerandom.py
+cp cryptoapi_bench_random.json  meteor_app/private/
+mv cryptoapi_bench_random2.json cryptoapi_bench_random.json
+Run from eclipse, HJGraphBuilderForActiveLearningInterface
+cp ~/repos/MUDetect/src2egroum2aug/output/java.security.SecureRandom__Key/java.security.SecureRandom__Key_* graphs/
+cp ~/repos/MUDetect/src2egroum2aug/output/java.security.SecureRandom__Key/java.security.SecureRandom__Key_* meteor_app/private/original_graphs
+
+
+
+python3 meteor_app/misc_scripts/convert_github_files_into_json_dataset_crypto.py
+cp crypto_warnings.json meteor_app/private/ 
+
+HJGraphBuilderForFalseAlarmSuppression
+cp ~/repos/MUDetect/src2egroum2aug/output/crypto__getInstance/crypto__getInstance* graphs/                                                    
+cp ~/repos/MUDetect/src2egroum2aug/output/crypto__getInstance/crypto__getInstance* meteor_app/private/original_graphs/  
+
+
+NULL_DEREF
+==========
+
+python3 meteor_app/misc_scripts/convert_infer_warnings.py /Users/xxx/repos/static_analysis_warnings/server/nacos/report.json NULL_DEREFERENCE alibaba/nacos 828acd3b2baf0685e372c0e9f0cc47ed0a8b389a
+
+cp infer_warnings_alibaba_nacos_NULL_DEREFERENCE.json meteor_app/private/  
+
+HJGraphBuilderForInferSuppression
+
+cp ~/repos/MUDetect/src2egroum2aug/output/NULL_DEREFERENCE__nacos/NULL_DEREFERENCE__nacos_* graphs     
+cp ~/repos/MUDetect/src2egroum2aug/output/NULL_DEREFERENCE__nacos/NULL_DEREFERENCE__nacos_* meteor_app/private/original_graphs/   
+
+
+RESOURCE LEAK
+=============
+
+python3 meteor_app/misc_scripts/convert_old_infer_warnings.py /Users/xxx/repos/static_analysis_warnings/server/presto/report.json RESOURCE_LEAK prestodb/presto b46d506a062f487cc81348f00ebf681cfdc92693
+
+run this instead: START=52 END=145 python3 meteor_app/misc_scripts/convert_old_infer_warnings.py /Users/xxx/repos/static_analysis_warnings/server/presto/report.json RESOURCE_LEAK prestodb/presto b46d506a062f487cc81348f00ebf681cfdc92693
+
+cp infer_warnings_prestodb_presto_RESOURCE_LEAK.json meteor_app/private/
+HJGraphBuilderForInferSuppression
+cp ~/repos/MUDetect/src2egroum2aug/output/RESOURCE_LEAK__presto/RESOURCE_LEAK__presto_* meteor_app/private/original_graphs/         
+cp ~/repos/MUDetect/src2egroum2aug/output/RESOURCE_LEAK__presto/RESOURCE_LEAK__presto_* graphs/ 
+
+
+
+TOY
+
+
+
+python3 meteor_app/misc_scripts/convert_infer_warnings.py /Users/xxx/repos/static_analysis_warnings/server/toy2/infer-out/report.json NULL_DEREFERENCE xxx/toy_analysis 8dab428880c995f4cfe31440cf8720868d4456a4
+cp infer_warnings_xxx_toy_analysis_NULL_DEREFERENCE.json meteor_app/private/
+HJGraphBuilderForInferSuppression
+cp ~/repos/MUDetect/src2egroum2aug/output/NULL_DEREFERENCE__toy_analysis/NULL_DEREFERENCE__toy_analysis_* meteor_app/private/original_graphs/
+cp ~/repos/MUDetect/src2egroum2aug/output/NULL_DEREFERENCE__toy_analysis/NULL_DEREFERENCE__toy_analysis_* graphs
+
+
+python3 meteor_app/misc_scripts/convert_infer_warnings.py /Users/xxx/repos/static_analysis_warnings/server/toy1/infer-out/report.json RESOURCE_LEAK xxx/toy_analysis 8dab428880c995f4cfe31440cf8720868d4456a4
+cp infer_warnings_xxx_toy_analysis_RESOURCE_LEAK.json meteor_app/private/   
+HJGraphBuilderForInferSuppression
+cp ~/repos/MUDetect/src2egroum2aug/output/RESOURCE_LEAK__toy_analysis/RESOURCE_LEAK__toy_analysis_* meteor_app/private/original_graphs/ 
+cp ~/repos/MUDetect/src2egroum2aug/output/RESOURCE_LEAK__toy_analysis/RESOURCE_LEAK__toy_analysis_* graphs/  
+
+
+
+other notes:
+
+	on fettucine: 
+		/scratch/xxx/infer_projects/static_analysis_toy
+		/scratch/xxx/infer_projects/static_analysis_toy2
+		/scratch/xxx/infer_projects/nacos
+		/scratch/xxx/infer_projects/presto
+
+	xxx_infer_110 (for NPE)
+	xxx_infer (for Resource Leaks. )
+
+For NPE:
+Infer version v1.1.0
+
+
+infer --version
+Infer version v0.13.1
+Copyright 2009 - present Facebook. All Rights Reserved.
+
+nacos : 828acd3b2baf0685e372c0e9f0cc47ed0a8b389a
+presto: b46d506a062f487cc81348f00ebf681cfdc92693
+
+i have the infer warning reports locally at /Users/xxx/repos/static_analysis_warnings/server
+
+the dockers on fettuccine were based on the image built using the Infer dockerfile. I couldn not find a docker image off dockerhub
+
+
+
+SPOTBUGS NULL lucene-solr
+
+python3 meteor_app/misc_scripts/convert_spotbugs.py lucene-solr-spotbugs.xml _NULL_ apache/lucene-solr 43535fecb8455b3f9364f447e129ae05f79697e2
+
+HJGraphBuilderForInferSuppression
+cp ~/repos/MUDetect/src2egroum2aug/output/apache_lucene-solr__NULL_/* meteor_app/private/original_graphs
+cp ~/repos/MUDetect/src2egroum2aug/output/apache_lucene-solr__NULL_/* graphs/   

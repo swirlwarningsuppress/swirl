@@ -1,0 +1,1 @@
+stringbuilder won't return null

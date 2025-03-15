@@ -1,0 +1,2 @@
+3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,
+4 - Transport.createRaw#HostAndPort#Optional#Optional#int#,java.lang.Object

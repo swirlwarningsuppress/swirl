@@ -1,0 +1,2 @@
+3 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,io.airlift.drift.transport.apache.client
+4 - Transport.createRaw#HostAndPort#Optional#Optional#int#,com.facebook.presto.hive.metastore.thrift

@@ -1,0 +1,116 @@
+String:Error initializing secure socket,47
+Optional.map(),92
+TProtocolFactory.getProtocol(),102
+Address,111
+boolean:false,59
+InetSocketAddress,88
+SSLSocket,46
+HostAndPort.getHost(),39
+InvokeRequest.getAddress(),110
+ApacheThriftMethodInvoker.readResponse(),109
+this.Proxy.NO_PROXY,96
+this.Optional,98
+UNKNOWN.getSocketFactory(),114
+this.TTransportFactory,113
+IllegalArgumentException,2
+UNKNOWN.toMillis(),67
+String:requestTimeout is null,79
+TSocket.open(),0
+SSLSocket.<cast>,45
+ClientTestUtils.getClientSslContext(),43
+String:delayService is null,69
+ApacheThriftMethodInvoker.writeRequest(),99
+ByteArrayOutputStream.<init>,54
+SSLContext.getSocketFactory(),48
+TBinaryProtocol.<init>,37
+HostAndPort.getPort(),41
+InetSocketAddress.<init>,87
+ListeningExecutorService,75
+InvokeRequest,108
+Transport,34
+TTransportFactory.<init>,4
+InvokeRequest.getMethod(),100
+Socket.<init>,81
+TTransportException,50
+Address.getHostAndPort(),101
+TProtocol,13
+OrcOutputBuffer.<init>,52
+DATA:DATA,55
+Protocol,35
+null:LAMBDA,91
+Socket.setSoTimeout(),63
+String:Unsupported protocol,17
+String:Unsupported transport,24
+TSocket.isOpen(),23
+TSocket.<init>,38
+IOException,86
+Client.Log(),10
+<return>,8
+<catch>,28
+this.TProtocolFactory,103
+Ints.saturatedCast(),60
+Throwable.addSuppressed(),89
+ColumnWriterOptions,53
+ListeningScheduledExecutorService,76
+UNKNOWN.orElse(),95
+String:socksProxy is null,70
+TTransport,16
+Socket.setKeepAlive(),57
+String:sslContext is null,71
+ConnectionFailedException,105
+Socket,58
+TException,27
+TProtocolFactory,77
+<throw>,3
+LegacyApacheThriftTesterUtil.assertEquals(),14
+Socket.close(),85
+ApacheThriftMethodInvoker.createTSocket(),106
+ApacheThriftMethodInvoker.setSocketProperties(),82
+List.isEmpty(),22
+Socket.connect(),93
+List,32
+Client,6
+int:1,7
+int:0,25
+RuntimeException.<init>,31
+TSocket,20
+Optional,51
+Socket.setTcpNoDelay(),62
+Optional.orElse(),84
+Duration,78
+boolean:true,56
+TTransportFactory.getTransport(),15
+this.int,64
+Throwable,83
+Socket.setSoLinger(),61
+InvokeRequest.getParameters(),107
+String:transportFactory is null,72
+IllegalArgumentException.<init>,1
+TFramedTransport.Factory.<init>,21
+LegacyApacheThriftTesterUtil,29
+ApacheThriftMethodInvoker.throwIfUnchecked(),90
+this.ResultCode.OK,9
+Optional.isPresent(),94
+ConnectionFailedException.<init>,104
+HostAndPort,30
+Proxy,97
+RuntimeException,33
+ApacheThriftMethodInvoker.requireNonNull(),66
+String:protocolFactory is null,74
+AutoCloseable.close(),26
+Client.<init>,36
+String:connectTimeout is null,65
+TSocket.close(),112
+TTransportFactory,5
+SSLContext,44
+TCompactProtocol.<init>,12
+Exception,40
+int,115
+boolean,19
+Optional.get(),80
+TTransportException.<init>,49
+String:executorService is null,68
+UNKNOWN.createSocket(),42
+ApacheThriftMethodInvoker,73
+UNKNOWN,11
+LegacyApacheThriftTesterUtil.createClientSocket(),18

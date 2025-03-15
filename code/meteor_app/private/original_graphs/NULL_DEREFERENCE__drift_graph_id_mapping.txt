@@ -1,0 +1,4 @@
+ThriftStructMetadataBuilder.java8,0,8 - ThriftStructMetadataBuilder.buildField#Collection#
+ThriftStructMetadataBuilder.java9,1,9 - ThriftStructMetadataBuilder.buildField#Collection#
+ThriftUnionMetadataBuilder.java10,2,10 - ThriftUnionMetadataBuilder.buildField#Collection#
+ThriftUnionMetadataBuilder.java11,3,11 - ThriftUnionMetadataBuilder.buildField#Collection#

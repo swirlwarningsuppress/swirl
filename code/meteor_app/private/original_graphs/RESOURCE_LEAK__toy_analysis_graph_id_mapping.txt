@@ -1,0 +1,10 @@
+WrappedCloseable.java0,0,0 - WrappedCloseable.safe#
+WrappedCloseable22.java2,1,2 - WrappedCloseable22.safe2#
+AutoclosingSockets.java4,2,4 - AutoclosingSockets.safe#
+AutoclosingSockets2.java6,3,6 - AutoclosingSockets2.safe#SSLContext#
+ReturnCloseable.java8,4,8 - ReturnCloseable.unsafe#
+Standard.java10,5,10 - Standard.unsafe#String[]#
+ReturnCloseable2.java12,6,12 - ReturnCloseable2.unsafe#
+ImplementAutoCloseable.java14,7,14 - ImplementAutoCloseable.unsafe#
+ImplementAutoCloseable.java16,8,16 - ImplementAutoCloseable.unsafe#
+AutoclosingSockets2.java18,9,18 - AutoclosingSockets2.safe2#SSLContext#

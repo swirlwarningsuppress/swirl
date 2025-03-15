@@ -1,0 +1,2 @@
+1 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,io.airlift.drift.transport.apache
+0 - ApacheThriftMethodInvoker.createTSocket#HostAndPort#,io.airlift.drift.transport.apache

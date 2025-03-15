@@ -1,0 +1,701 @@
+<body>
+	<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.css"> -->
+	<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.all.min.js"></script>   -->
+	<link rel="stylesheet"
+		href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		.collapsible {
+		background-color: #777;
+		color: white;
+		cursor: pointer;
+		padding: 18px;
+		width: 100%;
+		border: none;
+		text-align: center;
+		outline: none;
+		font-size: 15px;
+		}
+		.active, .collapsible:hover {
+		background-color: #555;
+		}
+	</style>
+	<div class="container-fluid">
+		<div class="row" style="padding-top: 0em;">
+			<div class="user-study-config bg-light" style="position: fixed; height: 47vh; padding-top:20vh; padding-bottom:22vh;  border-bottom: 1px solid black; z-index: 5;">
+				<div class="task-message hidden">
+					<h1 class="center">Your time is up. Please wrap up and click on "End task"</h1>
+				</div>
+				<span class="participant-id-text">Participant ID:</span> <input type="text"  id="participant_id"  />
+				<div id="selector" class="hidden">
+					Which tool?  
+					<div class="dropdown" style="display: inline-block;">
+						<select id="change-tool">
+						<option value="baseline" {{selectedIfBaseline}} >Warning Explore</option>
+						<option value="tool" {{selectedIfNotBaseline}} >Group Explore</option>
+						</select>
+					</div>
+				   
+				</div>
+        <div class="user-study-instructions" style="width:50%">
+          Your goal is to inspect as many static analysis warnings as you can.
+          Many warnings are false alarms/can be ignored. Your task is to identify them and mark them as such.
+          The task ends once your time is up. Skip a warning if you find it too difficult or you think there is not enough information provided.
+        </div>
+				<span class="btn hide-user-study-config btn-primary">Start task (You have 10 mins for inspecting 25 warnings) </span>
+        <span class="btn end-task-btn disabled hidden" style="margin-left:10%">End task</span>
+			</div>
+			<div class="col-md-5 {{hideIfBaseline}}" style="padding-top: .5em;   align-items: stretch; justify-content: space-between; ">
+				<div>
+					<!-- <span class="collapse-control btn {{hideIfNotPseudolabels}}"  type="button" data-target="#collapsePseudoLabels" aria-expanded="false" aria-controls="#collapsePseudoLabels">v Filter by user descriptions</span> -->
+				</div>
+				
+				<div class="row" style="padding-left:16px;">
+					<h1>Filters</h1>
+					<strong>Overall Progress</strong>
+					<div class="progress" style="padding:0">
+						<div class="progress-bar1 progress-bar-danger" role="progressbar" style="width:{{countLabelledExamplesWidth 'positive'}}%">
+							Uninteresting
+						</div>
+						<div class="progress-bar1 progress-bar-success" role="progressbar" style="width:{{countLabelledExamplesWidth 'negative'}}%">
+							Interesting
+						</div>
+						<div class="progress-bar1 progress-bar-warning" role="progressbar" style="width:{{countLabelledExamplesWidth ''}}%">
+							Uninspected
+						</div>
+					</div>
+					<!-- Legend:
+						<div class="col-md-12">
+						  <div class="row">
+						    <div class="col-md-3 bg-success text-white">Suppressed</div>  
+						  </div>
+						  <div class="row">
+						    <div class="col-md-3 bg-warning">Inspected</div>
+						  </div>
+						  <div class="row">
+						    <div class="col-md-3 bg-danger text-white">Uninspected</div>
+						  </div>
+						</div> -->
+				</div>
+			</div>
+			<div class="col-md-7 row analysis-region bg-light" style="margin-left: 4px;">
+				<h1>Warnings</h1>
+				<div style="align-content: center; " class="row">
+					<h5 class="center"></h5>
+				</div>
+				<div class="col-md-12 center" style="display:none;">
+					<!-- <span class="btn all-examples {{isActive 'all' }} {{isActive 'matching'}}"> {{allOrMatchingText}} </span> -->
+					<!-- <span class="btn matching-examples {{isPaletteVisible 'matching' }}"> Match Palette</span> -->
+					<!-- <input class="keyword-search"  placeholder="Search examples" val="{{currentKeyword}}"/> -->
+					<!-- <span class="btn open-frequent-subgraph-modal" data-toggle="modal" data-target="#frequentSubgraphModal">View patterns summarizing examples</span> -->
+					<!-- <span class="btn open-matching-examples-modal" data-toggle="modal" data-target="#matchingExamplesModal">Bootstrap pattern B</span> -->
+					<!-- or  -->
+					<!-- <span class="btn new-example" data-toggle="modal" data-target="#newExampleModal">Add Example</span> -->
+					<!-- <span class="btn connect-repo" data-toggle="modal" data-target="#connectToRepoModal">Apply Pattern to repository</span> -->
+					<!-- <span class="btn open-label-query-examples-modal" data-toggle="modal" data-target="#labelQueryExamplesModal">Step 1. Bootstrap initial pattern</span> -->
+					<span class="btn open-label-query-examples-modal hidden" data-toggle="modal" data-target="#labelQueryExamplesModal">Step 1. Bootstrap initial pattern</span>
+					<!-- <span class="btn open-openai-examples-modal" data-toggle="modal" data-target="#openaiExamplesModal">Bootstrap initial pattern using LLM</span> -->
+					<!-- <span class="btn" data-toggle="modal" data-target="#testPatternModal" {{disableIfEmptyPalette}}>Add Pattern to Bag</span> -->
+				</div>
+				<div class="modal" id="testPatternModal" tabindex="-1" role="dialog" data-backdrop="false" aria-labelledby="testPatternModal" aria-hidden="true" style="margin-left:30%; width:50%; ">
+					<div class="" role="document" >
+						<div class="modal-content ">
+							<div class="modal-header">
+								<h5 class="modal-title" id="testPatternModal">Apply pattern to new repository</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body" style="height:80vh">
+								Once you are ready, click "Apply" to finalize the pattern. 
+								The matching examples will be removed from the dataset, so you can focus on the next pattern.
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-success add-button add-to-bag">Apply</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal" id="taskCompleteModal" tabindex="-1" role="dialog" aria-labelledby="taskCompleteModal" aria-hidden="true" style="margin-left:30%; width:50%; ">
+					<div class="" role="document" >
+						<div class="modal-content ">
+							<div class="modal-header">
+								<h5 class="modal-title" id="taskCompleteModal">Task Complete!</h5>
+							</div>
+							<div class="modal-body" style="height:80vh">
+								<p>Task Complete! </p>
+								<p>Please fill out the forms provided in the task instructions: <a href="https://forms.gle/DcEFotpfG93V69zo9">https://forms.gle/DcEFotpfG93V69zo9</a>
+								</p>
+                <p>Here are the statistics of your labels:</p>
+                <div class="progress" style="padding:0">
+                  <div class="progress-bar1 progress-bar-danger" role="progressbar" style="width:{{countLabelledExamplesWidth 'positive'}}%">
+                    Uninteresting
+                  </div>
+                  <div class="progress-bar1 progress-bar-success" role="progressbar" style="width:{{countLabelledExamplesWidth 'negative'}}%">
+                    Interesting
+                  </div>
+                  <div class="progress-bar1 progress-bar-warning" role="progressbar" style="width:{{countLabelledExamplesWidth ''}}%">
+                    Uninspected
+                  </div>
+                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal" id="viewTraceModal" tabindex="-1" role="dialog" data-backdrop="true" aria-labelledby="viewTraceModal" aria-hidden="true" style="margin-left:0%; width:40%; ">
+					<div class="" role="document" >
+						<div class="modal-content ">
+							<div class="modal-header">
+								<h5 class="modal-title" id="viewTraceModal">View Trace</h5>
+								<button class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<div class="modal-body traces-view" style="height:80vh">
+								{{#each viewedTraces}}
+								<strong>{{this.methodName}} (<a href="{{githubUrlWithLineNumber this}}" target="_blank">View source code of entire class on GitHub</a>)</strong>
+								<pre><code  class="language-java">{{snippet}}</code></pre>
+								{{/each}}
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close" style="margin:auto">
+								<span aria-hidden="btn btn-primary true">Close</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="col-md-5" style="padding-top: .5em; padding-right: .5em;  border-right:  solid black"> -->
+				<!-- <strong class="center"> Add program elements to the Palette </strong> -->
+				<!-- </div> -->
+				<div class="col-md-12 {{hideIfNotBaseline}}">
+					<!-- $('#labelAllExamplesModal').modal('show'); -->
+					<!-- <span class="view-baseline-matching-examples underline_on_hover btn btn-primary" data-toggle="modal" data-target="#labelAllExamplesModal" href="#" style="">View and label examples</span> -->
+				</div>
+				<div class="col-md-12 " style="">
+					<div class="col-md-10 row">
+						<div class="row collapse show in collapseConfig" id="collapseConfig">
+						</div>
+						<span class="btn collapse-control btn-sm hidden" style="width:fit-content; margin-left:80%" data-target="#collapseConfig" aria-expanded="false" aria-controls="collapseConfig">Config</span>
+						<div class="row" style="padding-bottom: 4px;">
+							<span class="{{alertIfViewExampleIndicator}}" style="padding:8px">Showing <span class="text-white bg-dark" style="width: fit-content;">{{queryExamplesCount}}</span> warnings </span>
+							<span > <strong>Current filters:</strong> <span class="bg-white">{{currentFilters}} <span class="filter-delete {{hideFilterRelatedButtonIfNoFilter}}"></span> </span>  
+							<span class=" btn filter-apply-to-all {{hideFilterRelatedButtonIfNoFilter}}" style="margin-left:20%; display:none;">Suppress warnings matching the filter</span></span>
+						</div>
+						<!-- <div class="row"> -->
+						<!-- </div> -->
+						<!-- <div class="col-md-8" > <span></span></div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class=" pattern-container {{hideIfBaseline}}  {{shrinkIfLabelByExample}}">
+				<table class="table table-striped table-bordered table-hover table-condensed">
+					<thead>
+						<tr style="border-bottom: 1px solid black">
+							<th  style="border-right: 1px solid black; word-wrap: break-word; max-width: 20%;">Rule Name</th>
+							<th  style="border-right: 1px solid black; word-wrap: break-word; max-width: 20%;">Rules</th>
+							<th><span style="">Inspection Progress</span></th>
+						</tr>
+					</thead>
+					{{#each topContainmentPatterns}}
+					{{>containmentPattern}}
+					{{/each}}
+				</table>
+				<!-- button to open containmentPredicatesModal -->
+				<!-- <span class="btn open-containment-predicates-modal" data-toggle="modal" data-target="#containmentPredicatesModal">View all containment predicates</span> -->
+				<btn class="btn show-all " style="width:fit-content">View uninspected warnings</btn>
+				<btn class="btn show-unmatching-spare-button hidden" style="width:fit-content">Show examples that do not match a pattern</btn>
+			</div>
+			<div class="exmaple-container col-md-7 bg-light">
+				<!-- <div class="col-md-5" style="padding-left:20px"></div> -->
+				<div class="bg-light   " style="height: 100vh; {{hideIfNotLabelByExample}}; overflow: scroll;">
+					{{#each queryExamples}}
+					{{> example}}
+					{{/each}}
+					<div class=""> <span class="btn end-task-btn" style="margin-left:10%">End task</span> </div>
+				</div>
+			</div>
+		</div>
+    <div class="loading-bar">
+      <!-- <div class="progress hidden"></div> -->
+      <div class="hidden status-box alert alert-success" style="position: fixed; bottom: 0; width: 90%; ">
+        
+        <a type="" class="btn status-box-close">&times;</a>
+        <span class="status-box-text"></span>
+        
+      </div>
+    </div>
+		<!-- show unmatching examples -->
+	</div>
+	<div class="modal" id="labelQueryExamplesModal" tabindex="-1" role="dialog" aria-labelledby="labelQueryExamplesModal" aria-hidden="true" style="margin-left:0;">
+		<div class="" role="document">
+			<div class="modal-content ">
+				<div class="modal-header">
+					<h5 class="modal-title" id="labelQueryExamplesModal">Bootstrap a pattern</h5>
+					<!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+						</button> -->
+				</div>
+				<div class="modal-body row" style="height:100vh; max-height:100vh;">
+					<span>The following are the code locations where warnings of the same type are reported. Mark them as uninteresting (red header) and interesting (green header). 
+					</span>
+					<span>
+					Scroll down and click on the Infer Pattern button at the bottom of the page.</span>
+					<div class="col-md-7">
+						<!-- {{queryCount}} Examples to label -->
+						{{#each queryExamples}}
+						{{> example}}
+						{{/each}}
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+						</div>
+						<div class="col-md-1">
+							<span class="btn infer-pattern-btn btn-primary {{disabledIfNoDiscriminativeSubgraphs}}">Infer pattern</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="labelAllExamplesModal" tabindex="-1" role="dialog" aria-labelledby="labelAllExamplesModal" aria-hidden="true" style="margin-left:0;">
+		<div class="" role="document">
+			<div class="modal-content ">
+				<div class="modal-header">
+					<h5 class="modal-title" id="labelAllExamplesModal">(ExampleRefiner) Inspect these examples</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body row" style="height:100vh; max-height:100vh;">
+					<!-- <span>Once you are done, click on the Infer Pattern button right at the bottom</span> -->
+					<p>Inspect the following code examples to answer the dataset comprehension questions (on the google doc/form).</p>
+					<p>Green: positive. Red: negative. Blue: unlabelled (could be either positive or negative)</p>
+					<p>You may skip an example if you wish to. To end the task, scroll down to the bottom and click "Infer Pattern".</p>
+					<div class="col-md-7">
+						<!-- {{queryCount}} Examples to label -->
+						{{#each baselineExamples}}
+						{{> example}}
+						{{/each}}
+					</div>
+					<div class="row">
+						<div class="col-md-5">
+						</div>
+						<div class="col-md-1">
+							<span style="{{showIfNoDiscriminativeSubgraphs}}">Loading ... (label more examples (again) if the button cannot be clicked)</span>
+							<span class="btn baseline-infer-pattern-btn btn-primary {{disabledIfNoDiscriminativeSubgraphs}}">Infer pattern and end the task</span>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal" id="openaiExamplesModal" tabindex="-1" role="dialog" aria-labelledby="openaiExamplesModal" aria-hidden="true" style="margin-left:0;">
+		<div class="" role="document">
+			<div class="modal-content ">
+				<div class="modal-header">
+					<h5 class="modal-title" id="openaiExamplesModalTitle">Label the following API Usages</h5>
+					<span class="btn openai-infer-pattern-btn ">Infer pattern</span>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body row" style="height:100vh; max-height:100vh;">
+					<div class="col-md-7">
+						{{#each openaiExamples}}
+						{{> openaiExample}}
+						{{/each}}
+					</div>
+				</div>
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<template name="example">
+	<div>
+		<!-- <a href="{{url}}" target="_blank">Link to the GitHub source code</a> -->
+		<div class="" style="background-color: {{exampleColoring this}}; border-radius: 5px 5px 0 0; color:white" id="{{readableExampleId}}">
+			<!-- <span class="center" style="">Example {{exampleID}}</span> -->
+			{{#if prelabelled}}
+			<!--
+				<div class="center" style="">Warning {{readableExampleId exampleID}}: </div>
+				-->
+			<button type="button" class="collapsible" style="background-color: {{exampleColoring this}};">Warning {{readableExampleId exampleID}}</button>
+			<div class="content" style="display: block;">
+				<div class="center">
+					<span style="margin-right:4px; padding-left:8px; {{showIfPositiveLabel this}}"><strong>Suppress</strong></span>
+					<!-- <span style="margin-left:50%; margin-right:4px; {{showIfNegativeLabel this}}"><strong>Negative</strong></span> -->
+				</div>
+			</div>
+			{{else}}
+			<button type="button" class="collapsible" id="collapsibleButton{{readableExampleId exampleID}}" style="background-color: {{exampleColoring this}};">Warning {{readableExampleId exampleID}} {{matchByRuleText}} <span class="{{showIfUnlabelled this}}"></span>:</button>
+			<div class="content{{readableExampleId exampleID}}" style="display: block;">
+				<!--
+					<div class="center">Warning {{readableExampleId exampleID}} <span class="{{showIfUnlabelled this}}"></span>: </div>
+					-->
+				<div class="center">
+					<!-- <span class=""  style="margin-right:4px; padding-left:8px"></span> -->
+					<span  id="decisionBtnFP{{readableExampleId exampleID}}" label="{{label}}" style="" data-button-name="{{dataset}}--{{exampleID}}--positive--{{clusterContext}}"  data-method-name="{{methodName rawCode}}" data-option="positive" value="positive" class="btn toggle-checked decision-btn">Uninteresting</span>
+					<!-- <span style="margin:auto; text-align: center;  {{showIfUnlabelled this}}" class="{{hideIfBaseline}}"><strong>Unlabelled</strong></span> -->
+					<!-- <span class="" style="margin-left:50%; margin-right:4px;">Don't suppress</span> -->
+					<span  id="decisionBtnTP{{readableExampleId exampleID}}" label="{{label}}" style="margin-left:20%;" data-button-name="{{dataset}}--{{exampleID}}--negative--{{clusterContext}}"  data-method-name="{{methodName rawCode}}" data-option="negative" value="negative" class="btn toggle-checked decision-btn">Interesting</span>
+				</div>
+			</div>
+			{{/if}}
+		</div>
+		<div class="content{{readableExampleId exampleID}}" style="display: block;">
+			<span>Description: {{{displayQualifier qualifier}}}</span> 
+			<div class="collapse {{showIfMatchSourceClass}}" id="collapseTrace{{exampleID}}-{{clusterContext}}" style="height: {{showIfMatchSourceStyle}}">
+				{{#each steps}}
+				{{>exampleStep}}
+				{{/each}}
+			</div>
+			<!-- <button class="collapse-control" type="button" data-target="#collapseTrace{{exampleID}}-{{clusterContext}}" aria-expanded="false" aria-controls="collapseTrace{{exampleID}}-{{clusterContext}}">v View Source</button> -->
+			<!-- <button class="collapse-control" type="button" data-target="#collapseSink{{exampleID}}-{{clusterContext}}" aria-expanded="false" aria-controls="collapseSink{{exampleID}}-{{clusterContext}}">v View Sink</button> -->
+			<div class="collapse {{showIfMatchSinkClass}}" id="collapseSink{{exampleID}}-{{clusterContext}}" style="height: {{showIfMatchSinkStyle}}">
+				<p>
+					<!-- Viewing Sink -->
+				</p>
+				<span id="exampleID{{exampleID}}-{{clusterContext}}" class="example exampleID{{exampleID}}" data-additional="{{additionalNode}}" data-focal="{{sink}}">
+					<pre class=""><code class="language-java">package {{pkg}};</code><code class="language-java">class {{classname}} {{showExtendsIfHasAncestry ancestry}} {{removeDuplicates ancestry}} {
+    ...</code><code id="exampleID{{exampleID}}-{{clusterContext}}-code" class="maincode maincode-{{exampleID}} language-java" data-value="aa{{patternNumber}}">{{rawCode}}</code><code class="language-java">  ...
+    }</code>
+
+                  <div style="margin-left:auto"><a class="btn" style="text-decoration: none; color:black; " href="{{githubUrlWithLineNumber this}}" target="_blank"><i style="font-size:24px" class="fa">&#xf09b;</i></a><span data-toggle="modal" data-target="#viewTraceModal" class="viewTraceModalButton btn {{hideIfNotTrace this}}" data-example-id="{{exampleID}}">View trace</span></div>
+    </pre>
+					<span class="match-explanation center" style="display:none; margin-left:24px; margin-right:24px"></span>
+				</span>
+			</div>
+			<div class="hidden debugNodes">{{debugNodes this}}</div>
+		</div>
+	</div>
+	<div class="updated-msg {{updateMessageClasses this}}">{{updateMessage this}}</div>
+</template>
+<template name="exampleStep">
+	<span class="center">Viewing Trace (Source)</span>
+	<span id="exampleID{{exampleID}}-{{clusterContext}}" class="example exampleID{{exampleID}}" data-additional="{{additionalNode}}" data-focal="{{source}}">
+		<pre class=""><code class="language-java">package {{pkg}};</code><code class="language-java">class {{classname}} extends {{removeDuplicates ancestry}} {
+ ...</code><code id="exampleID{{exampleID}}-{{clusterContext}}-code" class="maincode language-java">{{rawCode}}</code><code class="language-java">  ...
+}</code>
+ </pre>
+		<span class="match-explanation center" style="display:none; margin-left:24px; margin-right:24px"></span>
+	</span>
+</template>
+<template name="openaiExample">
+	<div>
+		<!-- <a href="{{url}}" target="_blank">Link to the GitHub source code</a> -->
+		<div class="center" style="background-color: {{exampleColoring this}}; border-radius: 5px 5px 0 0; color:white">
+			<!-- <span class="center" style="">Example {{exampleID}}</span> -->
+			<span style="margin-right:4px;">Positive</span>
+			<input type="radio" label="{{label}}" name="{{dataset}}--{{_id}}--positive--{{clusterContext}}" {{checkedIfPositiveLabel this}} data-option="positive" value="positive" class="toggle-checked openAILabelRadio"/>
+			<span style="margin-left:50%; margin-right:4px;">Negative</span>
+			<input type="radio" label="{{label}}" name="{{dataset}}--{{_id}}--negative--{{clusterContext}}" {{checkedIfNegativeLabel this}}  data-option="negative" value="negative" class="toggle-checked openAILabelRadio"/>
+		</div>
+		<span  class="example exampleID{{exampleID}}" data-additional="{{additionalNode}}">
+			<pre class="example-highlighted-confused"><code>{{rawCode}}</code></pre>
+			<span class="match-explanation center" style="margin-left:24px; margin-right:24px"></span>
+		</span>
+	</div>
+</template>
+<template name="patternBreakdown">
+	<tr >
+		<td style="border: 1px solid black">{{patternNumber}}</td>
+		<td style="border: 1px solid black">{{currentCount}}</td>
+		<td style="border: 1px solid black"><span class="btn">Inspect</span></td>
+	</tr>
+</template>
+<template name="containmentPattern">
+	<tr >
+		<td id="ruleNameText{{patternNumber}}" >
+			{{onlyRuleName}}
+		</td>
+		<td style="width:60px; ">
+			{{#if pkg}}
+			<span style="background-color: #F6511D; color: white;  display: inline-block; padding: 2px 5px;">package: {{pkg}}</span>
+			{{/if}}
+			{{#if classname}}
+			<span style="background-color: #1D2F6F; color:white;  display: inline-block; padding: 2px 5px;">classname: {{classname}}</span> 
+			{{/if}}
+			{{#if ancestry}}
+			<span style="background-color: #FFB400; color:white;  display: inline-block; padding: 2px 5px;">subtype: {{ancestry}}</span>
+			{{/if}}
+			{{#if fieldsUsed}}
+			<span style="background-color: #00A6ED; color:white;  display: inline-block; padding: 2px 5px;">fields used: {{fieldsUsed}}</span>
+			{{/if}}
+			{{#if retType}}
+			<span style="background-color: #7FB800;  display: inline-block; padding: 2px 5px;">return type: {{retType}}</span> 
+			{{/if}}
+			<div style="display:flex; flex-direction: column;">
+				{{#each wordsForRule}}
+				<span style="background-color: #1D2F6F; color: white; word-wrap:break-word; display: inline-block; word-wrap: break-word; word-break: break-word; "> <input type="checkbox" class="word-refinement" data-rule-number="{{this.ruleNumber}}" data-value="{{this.word}}" {{checkedIfNotDisabled}} > {{{displayNode this.word}}}</span>
+				{{/each}}  
+			</div>
+			<!-- ({{countExamplesWithAttrsRegex this }}) -->
+			<div>
+				<input type="text" id="ruleName{{patternNumber}}" class="rule-name-input" data-rule-number="{{patternNumber}}" placeholder="Rule {{patternNumber}}">
+				<!-- <span  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  show-containment"  >View matching warnings</span> -->
+        <div style="padding-top: 4px;">Label matching warnings as:
+          <span  name="containment-rule-suppress"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}" data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  suppress-containment"  >Uninteresting</span>
+          <span  name="containment-rule-inspect"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}" data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  inspect-containment"  >Interesting</span>
+
+        </div>
+
+        <!-- <span  name="containment-rule-suppress"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}" data-value="-1" data-rule-number="{{patternNumber}}" class="btn  suppress-containment"  >Mark all as False Positives</span> -->
+
+				
+				<!-- <span  name="containment-pkg-{{pkg}}-infer-pattern"  data-option="{{pkg}}" data-containment="pkg" data-value="{{pkg}}" class="btn  infer-pattern-from-containment"  >Find</span> -->
+			</div>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th>
+						Total
+					</th>
+					<th>
+						Uninspected
+					</th>
+					<th>
+						Uninteresting
+					</th>
+					<th>
+						Interesting
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<a data-containment="{{selectorOfExamplesWithAttrs}}" data-value="{{patternNumber}}"  data-rule-number="{{patternNumber}}" class="show-containment">
+							{{countExamplesWithAttrsRegex this}}
+            </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="?" data-rule-number="{{patternNumber}}" class="  show-containment"  >
+						{{countUninspectedExamplesWithAttrsRegex this}}
+            </a>
+            
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="positive" data-rule-number="{{patternNumber}}" class="  show-containment" >
+						{{countSuppressedExamplesWithAttrsRegex this}}
+            </a>
+					</td>
+					<td>
+             <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="negative" data-rule-number="{{patternNumber}}" class="  show-containment" >
+
+              {{countInspectedExamplesWithAttrsRegex this}}
+            </a>
+					</td>
+           
+
+					<!--
+						{{countSuppressedExamplesWithAttrsRegex this}} / {{countInspectedExamplesWithAttrsRegex this}} / {{countExamplesWithAttrsRegex this}}
+						-->
+				</tr>
+			</table>
+		</td>
+	</tr>
+	{{#if hasContainmentRelationAndSelectedWords}}
+	<tr>
+		<td >
+		</td>
+		<td style="width:60px; overflow-wrap: break-word; padding-left:40px">
+			{{#if pkg}}
+			<span style="background-color: #F6511D; color:white;  display: inline-block; padding: 2px 5px;">package: {{pkg}}</span> 
+			{{/if}}
+			{{#if classname}}
+			<span style="background-color: #1D2F6F; color:white;  display: inline-block; padding: 2px 5px;">classname: {{classname}}</span> 
+			{{/if}}
+			{{#if ancestry}}
+			<span style="background-color: #FFB400; color:white;  display: inline-block; padding: 2px 5px;">subtype: {{ancestry}}</span>
+			{{/if}}
+			{{#if fieldUsed}}
+			<span style="background-color: #00A6ED; color:white;  display: inline-block; padding: 2px 5px;">fields used: {{fieldUsed}}</span>
+			{{/if}}
+			{{#if retType}}
+			<span style="background-color: #7FB800;  display: inline-block; padding: 2px 5px;">return type: {{retType}}</span> 
+			{{/if}}
+			<div>
+				
+				<div style="padding-top: 4px;">Label matching warnings as:
+          <span  name="containment-rule-suppress"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-value="-1" data-rule-number="{{patternNumber}}" class="btn  suppress-containment"  >Uninteresting</span>
+          <span  name="containment-rule-inspect"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"  data-value="-1" data-rule-number="{{patternNumber}}" class="btn  inspect-containment"  >Interesting</span>
+
+        </div>
+				
+				<!-- <span  name="containment-pkg-{{pkg}}-infer-pattern"  data-option="{{pkg}}" data-containment="pkg" data-value="{{pkg}}" class="btn  infer-pattern-from-containment"  >Find</span> -->
+			</div>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th>
+						Total
+					</th>
+					<th>
+						Uninspected
+					</th>
+					<th>
+						Uninteresting
+					</th>
+					<th>
+						Interesting
+					</th>
+				</tr>
+				<tr>
+					<td>
+						<!-- <span data-containment="{{selectorOfExamplesWithAttrs}}" data-value="-1" class="btn show-containment"> -->
+              <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}" data-value="-1" data-rule-number="{{patternNumber}}" data-rule-component="containment-only" class="  show-containment"  >
+							{{countExamplesWithAttrsWithoutWordsRegex this}}
+              </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"   data-value="-1" data-label="?" data-rule-number="{{patternNumber}}" data-rule-component="containment-only" class="  show-containment"  >
+
+						  {{countUninspectedExamplesWithAttrsWithoutWordsRegex this}}
+            </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"   data-value="-1" data-label="positive" data-rule-number="{{patternNumber}}" data-rule-component="containment-only" class="  show-containment"  >
+						{{countSuppressedExamplesWithAttrsWithoutWordsRegex this}}
+            </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option="{{selectorOfExamplesWithAttrs}}" data-containment="{{selectorOfExamplesWithAttrs}}"   data-value="-1" data-label="negative" data-rule-number="{{patternNumber}}" data-rule-component="containment-only" class="  show-containment"  >
+						{{countInspectedExamplesWithAttrsWithoutWordsRegex this}}
+            </a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+  {{/if}}
+  {{#if hasContainmentRelationAndSelectedWords}}
+	<tr>
+		<td>
+		</td>
+		<td style="width:60%; overflow-wrap: break-word; padding-left:40px">
+			<div style="display:flex; flex-direction: column;">
+				{{#each wordsForRule}}
+				<span style="background-color: #1D2F6F; color: white; word-wrap:break-word; display: inline-block; word-wrap: break-word; word-break: break-word; "> <input type="checkbox" class="word-refinement" data-rule-number="{{this.ruleNumber}}" data-value="{{this.word}}" {{checkedIfNotDisabled}} > {{{displayNode this.word}}}</span>
+				{{/each}}  
+			</div>
+			<!-- ({{countExamplesWithWords this }}) -->
+			<div>
+				<!-- <span  name="containment-rule"  data-option="" data-words="{{selectedWords}}" data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  show-containment"  >View</span> -->
+				
+				
+        <div style="padding-top: 4px;">Label matching warnings as:
+          
+          <span  name="containment-rule-suppress"  data-option="" data-words="{{selectedWords}}" data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  suppress-containment"  >Uninteresting</span>
+          <span  name="containment-rule-inspect"  data-option="" data-words="{{selectedWords}}" data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" class="btn  inspect-containment"  >Interesting</span>
+
+        </div>
+				<!-- <span  name="containment-pkg-{{pkg}}-infer-pattern"  data-option="{{pkg}}" data-containment="pkg" data-value="{{pkg}}" class="btn  infer-pattern-from-containment"  >Find</span> -->
+			</div>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th>
+						Total
+					</th>
+					<th>
+						Uninspected
+					</th>
+					<th>
+						Uninteresting
+					</th>
+					<th>
+						Interesting
+					</th>
+
+				</tr>
+				<tr>
+					<td>
+						
+              <a  name="containment-rule"  data-option="" data-words="{{selectedWords}}" data-value="{{patternNumber}}" data-rule-number="{{patternNumber}}" data-rule-component="code-only" class="  show-containment"  >
+							{{countExamplesWithWords this}}
+              </a>
+						
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option=""  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="?" data-rule-number="{{patternNumber}}" data-rule-component="code-only" class="  show-containment"  >
+              {{countUninspectedExamplesWithWords this}}
+            </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option=""  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="positive" data-rule-number="{{patternNumber}}" data-rule-component="code-only" class="  show-containment"  >
+              {{countSuppressedExamplesWithWords this}}
+            </a>
+					</td>
+					<td>
+            <a  name="containment-rule"  data-option=""  data-words="{{selectedWords}}"  data-value="{{patternNumber}}" data-label="negative" data-rule-number="{{patternNumber}}" data-rule-component="code-only" class="  show-containment"  >
+              {{countInspectedExamplesWithWords this}}
+            </a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	{{/if}}
+</template>
+<template name="pseudolabel">
+	<span class="{{hideIfEmptyDescription this}}"><strong>Justification</strong>: "{{this}}"</span>
+</template>
+<template name="node">
+	<div class="col-md-12">
+		<!-- <div class="col-md-1"> -->
+		<!-- </div> -->
+		<div style="padding-left: 0px; display: flex; ">
+			<!-- {{#each subgraphId in this.subgraphIds}} -->
+			{{#each subgraphId in allDiscriminativeSubgraphs}}
+			<!-- <div style="width:8%" > -->
+			<!-- <div style="align-items:center; display:flex;"> -->
+			<!-- </div> -->
+			<!-- Keep these around for copying the css colors -->
+			<span class="hide subgraph-{{subgraphId}}-node-correct" style="display:none"></span>
+			<span class="hide subgraph-{{subgraphId}}-node-misuse" style="display:none"></span>
+			<span class="hide subgraph-{{subgraphId}}-node" style="display:none"></span>
+			<!-- </div> -->
+			{{/each}}     
+		</div>
+		<div class="" style="padding-left:30px">
+			<div class="progress {{invisibleIfPseudo this }}" style="margin-bottom: 0px; margin-top:2px; min-width: 30%; max-width: 90%;" title="Out of {{positiveCount}} positive examples, {{labelledPositiveWidthCount this}} examples match">
+				<div class="progress-bar progress-bar-success" role="progressbar" style="background-color: rgba(0,100,225,0.8); width:{{labelledPositiveWidth this }}%"></div>
+				<div class="progress-bar progress-bar-warning" role="progressbar" style="background-color: rgba(0,100,225,0.2); width:{{remainingLabelledPositiveWidth this }}%"></div>
+			</div>
+			<div class="progress {{invisibleIfPseudo this }}" style="margin-bottom: 0px; margin-top:2px; min-width: 30%; max-width: 90%;" title="Out of {{negativeCount}} negative examples, {{labelledNegativeWidthCount this}} examples match">
+				<div class="progress-bar progress-bar-success" role="progressbar" style="background-color: rgba(154, 5, 30, 0.8); width:{{labelledNegativeWidth this }}%"></div>
+				<div class="progress-bar progress-bar-warning" role="progressbar" style="background-color: rgba(30, 0, 19, 0.2);  width:{{remainingLabelledNegativeWidth this }}%"></div>
+			</div>
+		</div>
+		<div class="row {{blurIfPreview this}} center">
+			<input type="checkbox" label="{{subgraphId}}" name="{{dataset}}--{{this.text}}--{{subgraphId}}" data-subgraph-id={{subgraphId}} data-subgraphs="{{csv this this.subgraphIds}}" data-option="positive" value="{{this.text}}"   {{isSubgraphChecked this}} class=" toggle-checked subgraph-{{subgraphId}} {{invisibleIfPseudo this}}  subgraphCheckbox" style="width: 15px; margin-left: 20px; margin-right:2px; display:relative;"/>
+			<span data-subgraphs="{{csv this this.subgraphIds}}" class="subgraph-node-selection  subgraph-0-node-{{correctOrMisuseClass this.subgraphIds}}  -{{joinDash this.subgraphIds}} {{boundedBoxIfFocalAPI this }}" style="flex: 1; margin-left:8px; color:white; {{backgroundColorIfPseudo this}}">{{{displayNode this.text}}}</span>   
+			<!-- background-color:hsla({{contextColor}}, 60%, 60%, 0.9) -->
+			<span class="discriminative-cancel {{hideCancelButton this}}" data-subgraph-id="{{this.subgraphIds}}" style="width:4px; margin-right: 50px; padding-right:20px; margin-left:20px;"></span>
+		</div>
+		<div class="" id="" style="padding-left:12px;">
+			<div class="collapse show in" id="collapse-{{this.subgraphIds}}">
+				{{#each this.children}}
+				<div class="row block-level " style="padding-top:1em; padding-left:8em;">
+					<!-- <div class="col-md-1"></div> -->
+					{{> node}}
+				</div>
+				{{/each}}  
+			</div>
+		</div>
+		{{nodeRendered this.subgraphIds}}
+	</div>
+</template>
+<template name="breadcrumb">
+	<!-- <span class="label label-default">{{shortName key}}<span class="badge removeFilter">x</span></span>  -->
+	<span class="{{key}}">{{shortName key}},</span>
+</template>

@@ -1,0 +1,4 @@
+9 - ThriftStructMetadataBuilder.buildField#Collection#,io.airlift.drift.codec.metadata.AbstractThriftMetadataBuilder,java.lang.Object
+11 - ThriftUnionMetadataBuilder.buildField#Collection#,io.airlift.drift.codec.metadata.AbstractThriftMetadataBuilder,java.lang.Object
+8 - ThriftStructMetadataBuilder.buildField#Collection#,io.airlift.drift.codec.metadata.AbstractThriftMetadataBuilder,java.lang.Object
+10 - ThriftUnionMetadataBuilder.buildField#Collection#,io.airlift.drift.codec.metadata.AbstractThriftMetadataBuilder,java.lang.Object
